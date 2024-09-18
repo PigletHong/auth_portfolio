@@ -15,4 +15,14 @@ public class TestController {
     public void test() {
         testService.test();
     }
+
+    @GetMapping("/test")
+    public void getTest() {
+        testService.getTest();
+    }
+
+    @PostMapping("/redis")
+    public void redisTest() {
+        testService.redisTest();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.auth.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SocialKey implements Serializable {
     private String serviceId;
     private String provider;
