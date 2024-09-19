@@ -4,13 +4,12 @@ import com.example.auth.domain.Account;
 import com.example.auth.domain.Guest;
 import com.example.auth.dto.RequestDto;
 import com.example.auth.dto.ResponseDto;
-import com.example.auth.exception.CustomException;
-import com.example.auth.exception.StatusCode;
+import com.example.auth.util.exception.CustomException;
+import com.example.auth.util.exception.StatusCode;
 import com.example.auth.repository.AccountRepository;
 import com.example.auth.repository.GuestRepository;
 import com.example.auth.util.jwt.TokenManager;
 import com.example.auth.util.uuid.UuidGenerator;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
