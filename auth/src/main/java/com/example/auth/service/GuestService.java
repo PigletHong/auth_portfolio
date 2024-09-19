@@ -69,4 +69,9 @@ public class GuestService {
         String accessToken = tokenManager.createAccessToken(account.getUid());
         return ResponseDto.TokenResponse.builder().accessToken(accessToken).build();
     }
+
+    public void test(String token) {
+        boolean t = this.tokenManager.validateAccessToken(token);
+        log.info("response : {}", t);
+    }
 }

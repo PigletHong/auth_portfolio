@@ -11,7 +11,8 @@ public enum StatusCode {
     NotExistGuest(HttpStatus.BAD_REQUEST, 1001, "존재하지 않는 게스트 계정입니다."),
     NotExistProjectLink(HttpStatus.BAD_REQUEST, 1002, "프로젝트에 가입이 되어 있지 않은 계정입니다."),
 
-    ExpiredToken(HttpStatus.BAD_REQUEST, 1003, "프로젝트에 가입이 되어 있지 않은 계정입니다."),
+    ExpiredToken(HttpStatus.BAD_REQUEST, 1003, "만료된 토큰입니다."),
+    InvalidToken(HttpStatus.BAD_REQUEST, 1003, "올바르지 않은 토큰입니다."),
 
     OK(HttpStatus.OK, 200, "응답이 정상 처리 되었습니다."),
     ;

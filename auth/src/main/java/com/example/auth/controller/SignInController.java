@@ -16,4 +16,10 @@ public class SignInController {
     public ResponseEntity<ResponseDto.TokenResponse> signInGuest(@PathVariable String projectId, @RequestBody RequestDto.GuestSignRequest request) {
         return ResponseEntity.ok(guestService.signInGuest(projectId, request));
     }
+
+    @GetMapping("/test")
+    public void test(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        guestService.test(token);
+    }
 }
