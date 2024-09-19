@@ -9,10 +9,6 @@ import java.time.LocalDateTime;
 @IdClass(WalletKey.class)
 public class Wallet {
     @Id
-    @Column(name = "service_id", nullable = false)
-    private String serviceId;
-
-    @Id
     @Column(name = "network", nullable = false)
     private String network;
 

@@ -17,10 +17,6 @@ import java.time.LocalDateTime;
 @Getter
 public class Social {
     @Id
-    @Column(name = "service_id", nullable = false)
-    private String serviceId;
-
-    @Id
     @Column(name = "provider", nullable = false)
     private String provider;
 

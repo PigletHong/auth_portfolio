@@ -11,7 +11,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 public class SocialKey implements Serializable {
-    private String serviceId;
     private String provider;
     private String socialId;
 
@@ -20,11 +19,11 @@ public class SocialKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SocialKey socialKey = (SocialKey) o;
-        return serviceId.equals(socialKey.serviceId) && provider.equals(socialKey.provider) && socialId.equals(socialKey.socialId);
+        return provider.equals(socialKey.provider) && socialId.equals(socialKey.socialId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(serviceId, provider, socialId);
+        return Objects.hash(provider, socialId);
     }
 }

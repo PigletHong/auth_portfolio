@@ -5,12 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_auth_email")
-@IdClass(EmailKey.class)
 public class Email {
-    @Id
-    @Column(name = "service_id", nullable = false)
-    private String serviceId;
-
     @Id
     @Column(name = "email", nullable = false)
     private String emailAddress;

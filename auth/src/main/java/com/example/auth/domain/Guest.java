@@ -5,12 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_auth_guest")
-@IdClass(GuestKey.class)
 public class Guest {
-    @Id
-    @Column(name = "service_id", nullable = false)
-    private String serviceId;
-
     @Id
     @Column(name = "device_id", nullable = false)
     private String deviceId;
