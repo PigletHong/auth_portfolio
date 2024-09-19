@@ -13,7 +13,7 @@ public class SignUpController {
     private final GuestService guestService;
 
     @PostMapping("/auth/api/{projectId}/signup/guest")
-    public ResponseEntity<ResponseDto.TokenResponse> signUpGuest(@PathVariable String projectId, @RequestBody RequestDto.GuestSignRequest request) throws Exception {
+    public ResponseEntity<ResponseDto.TokenResponse> signUpGuest(@PathVariable String projectId, @RequestBody RequestDto.GuestSignRequest request) {
         return ResponseEntity.ok(guestService.signUpGuest(projectId, request));
     }
 }
