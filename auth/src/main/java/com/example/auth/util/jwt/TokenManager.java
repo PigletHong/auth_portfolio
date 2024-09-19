@@ -8,8 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -29,7 +30,7 @@ public class TokenManager {
     private final RedisRepository redisRepository;
 
 
-    public String CreateAccessToken(long uid) throws Exception {
+    public String CreateAccessToken(long uid) {
         PrivateKey privateKey = this.getPrivateKey();
         String accessToken = Jwts.builder()
                 .setSubject(String.valueOf(uid))
@@ -42,26 +43,34 @@ public class TokenManager {
         return TOKEN_PREFIX + accessToken;
     }
 
-    private PrivateKey getPrivateKey() throws Exception {
-        String cachedPrivateKey = redisRepository.getValues("Auth:Token:PrivateKey");
-        if (!cachedPrivateKey.equals("false")) {
-            return this.CreatePrivateKey(cachedPrivateKey);
+    private PrivateKey getPrivateKey() {
+        try{
+            String cachedPrivateKey = redisRepository.getValues("Auth:Token:PrivateKey");
+            if (!cachedPrivateKey.equals("false")) {
+                return this.CreatePrivateKey(cachedPrivateKey);
+            }
+            ClassPathResource resource = new ClassPathResource(FILENAME);
+            String key = new String(Files.readAllBytes(resource.getFile().toPath()));
+            String privateKeyPEM = key
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace(System.lineSeparator(), "")
+                    .replace("-----END PRIVATE KEY-----", "");
+            redisRepository.setValues("Auth:Token:PrivateKey", privateKeyPEM, 3600);
+            return this.CreatePrivateKey(privateKeyPEM);
+        } catch (RuntimeException | IOException e) {
+            throw new RuntimeException(e);
         }
-        ClassPathResource resource = new ClassPathResource(FILENAME);
-        String key = new String(Files.readAllBytes(resource.getFile().toPath()));
-        String privateKeyPEM = key
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace(System.lineSeparator(), "")
-                .replace("-----END PRIVATE KEY-----", "");
-        redisRepository.setValues("Auth:Token:PrivateKey", privateKeyPEM, 3600);
-        return this.CreatePrivateKey(privateKeyPEM);
     }
 
-    private PrivateKey CreatePrivateKey(String privateKeyPEM) throws Exception {
-        byte[] encoded = java.util.Base64.getDecoder().decode(privateKeyPEM);
+    private PrivateKey CreatePrivateKey(String privateKeyPEM) {
+        try{
+            byte[] encoded = java.util.Base64.getDecoder().decode(privateKeyPEM);
 
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-        return keyFactory.generatePrivate(keySpec);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+            return keyFactory.generatePrivate(keySpec);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

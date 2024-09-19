@@ -4,6 +4,8 @@ import com.example.auth.domain.Account;
 import com.example.auth.domain.Guest;
 import com.example.auth.dto.RequestDto;
 import com.example.auth.dto.ResponseDto;
+import com.example.auth.exception.CustomException;
+import com.example.auth.exception.StatusCode;
 import com.example.auth.repository.AccountRepository;
 import com.example.auth.repository.GuestRepository;
 import com.example.auth.util.jwt.TokenManager;
@@ -21,11 +23,11 @@ public class GuestService {
     private final GuestRepository guestRepository;
     private final AccountRepository accountRepository;
 
-    @Transactional
-    public ResponseDto.TokenResponse signUpGuest(String projectId, RequestDto.GuestSignRequest request) throws Exception {
+    public ResponseDto.TokenResponse signUpGuest(String projectId, RequestDto.GuestSignRequest request) {
+
         Optional<Guest> existGuest = guestRepository.findById(request.getDeviceId());
         existGuest.ifPresent(guest -> {
-            throw new RuntimeException("Guest already exists");
+            throw new CustomException(StatusCode.ExistGuest);
         });
 
         Guest guest = Guest.builder()
@@ -45,9 +47,9 @@ public class GuestService {
         return ResponseDto.TokenResponse.builder().accessToken(accessToken).build();
     }
 
-    public ResponseDto.TokenResponse signInGuest(String projectId, RequestDto.GuestSignRequest request) throws Exception {
+    public ResponseDto.TokenResponse signInGuest(String projectId, RequestDto.GuestSignRequest request) {
         Optional<Guest> existGuest = guestRepository.findById(request.getDeviceId());
-        Guest guest = existGuest.orElseThrow(() -> new RuntimeException("Guest not found"));
+        Guest guest = existGuest.orElseThrow(() -> new CustomException(StatusCode.NotExistGuest));
         Account account = accountRepository.findByAccountKey(guest.getAccountKey()).orElseThrow(() -> new RuntimeException("Account not found"));
         String accessToken = tokenManager.CreateAccessToken(account.getUid());
         return ResponseDto.TokenResponse.builder().accessToken(accessToken).build();
