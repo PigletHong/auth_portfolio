@@ -1,5 +1,6 @@
 package com.example.auth.repository.redis;
 
+import com.example.auth.domain.OauthConfig;
 import com.example.auth.domain.ProjectInformation;
 import com.example.auth.util.exception.CustomException;
 import com.example.auth.util.exception.StatusCode;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RedisRepository {
     private static final String PROJECT_INFO_PREFIX = "auth:project-info:";
+    private static final String PROJECT_OAUTH_CONFIG = "auth:oauth-config:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
@@ -56,11 +58,31 @@ public class RedisRepository {
         }
     }
 
+    public Optional<OauthConfig> getOauthConfig(String projectId, String provider) {
+        try {
+            String cachedData = this.getValues(PROJECT_OAUTH_CONFIG + projectId + ":" + provider);
+            if (cachedData == null || cachedData.equals("false")) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(objectMapper.readValue(cachedData, OauthConfig.class));
+        } catch (JsonProcessingException e) {
+            throw new CustomException(StatusCode.InvalidParsingType);
+        }
+    }
+
     public void setProjectInformation(String projectId, ProjectInformation projectInformation) {
         try {
             String jsonString = objectMapper.writeValueAsString(projectInformation);
-            log.info(jsonString);
             this.setValues(PROJECT_INFO_PREFIX + projectId, jsonString, 3600);
+        } catch (JsonProcessingException e) {
+            throw new CustomException(StatusCode.InvalidParsingType);
+        }
+    }
+
+    public void setOauthConfig(String projectId, String provider, OauthConfig oauthConfig) {
+        try {
+            String jsonString = objectMapper.writeValueAsString(oauthConfig);
+            this.setValues(PROJECT_OAUTH_CONFIG + projectId + ":" + provider, jsonString, 3600);
         } catch (JsonProcessingException e) {
             throw new CustomException(StatusCode.InvalidParsingType);
         }

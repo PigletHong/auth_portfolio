@@ -15,6 +15,7 @@ public enum StatusCode {
     InvalidToken(HttpStatus.BAD_REQUEST, 1004, "올바르지 않은 토큰입니다."),
     InvalidProjectId(HttpStatus.BAD_REQUEST, 1005, "등록되지 않은 프로젝트 ID 입니다."),
     InvalidParsingType(HttpStatus.BAD_REQUEST, 1006, "변환 타입이 맞지 않습니다."),
+    NotExistOauthConfig(HttpStatus.BAD_REQUEST, 1007, "프로젝트에 해당하는 Oauth 설정이 없습니다."),
 
 
     OK(HttpStatus.OK, 200, "응답이 정상 처리 되었습니다."),
