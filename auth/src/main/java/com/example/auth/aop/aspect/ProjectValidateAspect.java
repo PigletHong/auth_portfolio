@@ -16,8 +16,7 @@ public class ProjectValidateAspect {
 
     @Before("@annotation(com.example.auth.aop.annotation.ProjectIdValidate) && args(projectId, ..)")
     public void validateProjectId(String projectId) {
-        System.out.println("AOP가 호출되었습니다: " + projectId);
-        configService.getProjectInformation(projectId)
+        this.configService.getProjectInformation(projectId)
                 .orElseThrow(() -> new CustomException(StatusCode.InvalidProjectId));
     }
 }

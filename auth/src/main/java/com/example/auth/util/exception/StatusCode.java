@@ -14,6 +14,7 @@ public enum StatusCode {
     ExpiredToken(HttpStatus.BAD_REQUEST, 1003, "만료된 토큰입니다."),
     InvalidToken(HttpStatus.BAD_REQUEST, 1004, "올바르지 않은 토큰입니다."),
     InvalidProjectId(HttpStatus.BAD_REQUEST, 1005, "등록되지 않은 프로젝트 ID 입니다."),
+    InvalidParsingType(HttpStatus.BAD_REQUEST, 1006, "변환 타입이 맞지 않습니다."),
 
 
     OK(HttpStatus.OK, 200, "응답이 정상 처리 되었습니다."),
