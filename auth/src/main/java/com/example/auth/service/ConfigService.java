@@ -13,6 +13,6 @@ public class ConfigService {
     private final ConfigRepository configRepository;
 
     public Optional<ProjectInformation> getProjectInformation(String projectId) {
-        return this.configRepository.getProjectInformation(projectId);
+        return configRepository.getProjectInformation(projectId);
     }
 }
