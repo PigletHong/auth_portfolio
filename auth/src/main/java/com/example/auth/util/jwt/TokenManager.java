@@ -57,6 +57,24 @@ public class TokenManager {
         return TOKEN_PREFIX + accessToken;
     }
 
+    public long getUid(String token) {
+        String tokenWithoutPrefix = token.replace(TOKEN_PREFIX, "");
+        boolean result = this.validateAccessToken(tokenWithoutPrefix);
+        if (!result) {
+            throw new CustomException(StatusCode.InvalidToken);
+        }
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(publicKey)
+                .requireAudience(AUDIENCE)
+                .requireIssuer(ISSUER)
+                .build()
+                .parseClaimsJws(tokenWithoutPrefix)
+                .getBody();
+
+        String subject = claims.getSubject();
+        return Long.parseLong(subject);
+    }
+
     public boolean validateAccessToken(String token) {
         try {
             String tokenWithoutPrefix = token.replace(TOKEN_PREFIX, "");
@@ -69,7 +87,6 @@ public class TokenManager {
                     .parseClaimsJws(tokenWithoutPrefix)
                     .getBody();
 
-            // 만료 시간을 확인합니다.
             Date expiration = claims.getExpiration();
             if (expiration != null && expiration.before(new Date())) {
                 throw new CustomException(StatusCode.ExpiredToken);

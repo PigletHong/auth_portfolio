@@ -1,5 +1,6 @@
 package com.example.auth.controller;
 
+import com.example.auth.aop.annotation.ProjectIdValidate;
 import com.example.auth.dto.RequestDto;
 import com.example.auth.dto.ResponseDto;
 import com.example.auth.service.GuestService;
@@ -12,14 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class SignInController {
     private final GuestService guestService;
 
+    @ProjectIdValidate
     @PostMapping("/auth/api/{projectId}/signin/guest")
     public ResponseEntity<ResponseDto.TokenResponse> signInGuest(@PathVariable String projectId, @RequestBody RequestDto.GuestSignRequest request) {
         return ResponseEntity.ok(guestService.signInGuest(projectId, request));
-    }
-
-    @GetMapping("/test")
-    public void test(@RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        guestService.test(token);
     }
 }
