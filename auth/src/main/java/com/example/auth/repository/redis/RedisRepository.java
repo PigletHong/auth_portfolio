@@ -5,13 +5,16 @@ import com.example.auth.domain.ProjectInformation;
 import com.example.auth.util.exception.CustomException;
 import com.example.auth.util.exception.StatusCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.jwk.JWK;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -20,6 +23,7 @@ import java.util.Optional;
 public class RedisRepository {
     private static final String PROJECT_INFO_PREFIX = "auth:project-info:";
     private static final String PROJECT_OAUTH_CONFIG = "auth:oauth-config:";
+    private static final String OAUTH_JSON_WEB_KEY_SET_URI = "auth:json-web-key-set-uri:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
@@ -70,6 +74,18 @@ public class RedisRepository {
         }
     }
 
+    public Optional<List<JWK>> getOauthJsonWebKeySet(String provider) {
+        try {
+            String cachedData = this.getValues(OAUTH_JSON_WEB_KEY_SET_URI + provider);
+            if (cachedData == null || cachedData.equals("false")) {
+                return Optional.empty();
+            }
+            return Optional.ofNullable(objectMapper.readValue(cachedData, new TypeReference<List<JWK>>() {}));
+        } catch (JsonProcessingException e) {
+            throw new CustomException(StatusCode.InvalidParsingType);
+        }
+    }
+
     public void setProjectInformation(String projectId, ProjectInformation projectInformation) {
         try {
             String jsonString = objectMapper.writeValueAsString(projectInformation);
@@ -83,6 +99,15 @@ public class RedisRepository {
         try {
             String jsonString = objectMapper.writeValueAsString(oauthConfig);
             this.setValues(PROJECT_OAUTH_CONFIG + projectId + ":" + provider, jsonString, 3600);
+        } catch (JsonProcessingException e) {
+            throw new CustomException(StatusCode.InvalidParsingType);
+        }
+    }
+
+    public void setOauthJsonWebKeySet(String provider, List<JWK> keySet) {
+        try {
+            String jsonString = objectMapper.writeValueAsString(keySet);
+            this.setValues(OAUTH_JSON_WEB_KEY_SET_URI + provider, jsonString, 3600);
         } catch (JsonProcessingException e) {
             throw new CustomException(StatusCode.InvalidParsingType);
         }
