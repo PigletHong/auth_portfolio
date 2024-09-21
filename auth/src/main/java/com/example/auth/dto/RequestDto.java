@@ -13,4 +13,14 @@ public class RequestDto {
         @JsonProperty("device_id")
         private String deviceId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    public static class SocialSignRequest {
+        @JsonProperty("type")
+        private String type;
+        @JsonProperty("value")
+        private String value;
+    }
 }
