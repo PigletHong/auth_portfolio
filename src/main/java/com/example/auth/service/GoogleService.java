@@ -1,5 +1,7 @@
 package com.example.auth.service;
 
+import com.example.auth.domain.Social;
+import com.example.auth.dto.RequestDto;
 import com.example.auth.repository.SocialRepository;
 import com.example.auth.util.exception.CustomException;
 import com.example.auth.util.exception.StatusCode;
@@ -25,14 +27,18 @@ import java.util.Optional;
 public class GoogleService {
     private final SocialRepository socialRepository;
 
-    public void signInByIdToken(String idToken) {
-        boolean validateResult = this.validateIdToken(idToken);
+    public void signInByIdToken(String projectId, RequestDto.SocialSignRequest request) {
+        boolean validateResult = this.validateIdToken(request.getValue());
+        String socialId;
         if (validateResult) {
-            String socialId = this.getSocialId(idToken);
-            log.info("Google User ID: " + socialId);
+            socialId = this.getSocialId(request.getValue());
+            log.info("Social Id: {}", socialId);
         } else {
             throw new CustomException(StatusCode.InvalidToken);
         }
+        Optional<Social> existSocial = this.socialRepository.getSocial(socialId);
+        existSocial.orElseThrow(() -> new CustomException(StatusCode.NotExistSocial));
+
     }
 
     private String getSocialId(String idToken) {

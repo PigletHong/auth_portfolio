@@ -5,6 +5,9 @@ import com.example.auth.dto.RequestDto;
 import com.example.auth.dto.ResponseDto;
 import com.example.auth.service.GoogleService;
 import com.example.auth.service.GuestService;
+import com.example.auth.util.exception.GlobalResponseDto;
+import com.example.auth.util.exception.ResponseUtil;
+import com.example.auth.util.exception.StatusCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +21,13 @@ public class SignInController {
     @ProjectIdValidate
     @PostMapping("/auth/api/{projectId}/signin/guest")
     public ResponseEntity<ResponseDto.TokenResponse> signInGuest(@PathVariable String projectId, @RequestBody RequestDto.GuestSignRequest request) {
-        return ResponseEntity.ok(guestService.signInGuest(projectId, request));
+        return ResponseUtil.response(guestService.signInGuest(projectId, request));
     }
 
-    /*
     @ProjectIdValidate
     @PostMapping("/auth/api/{projectId}/signin/google")
-    public ResponseEntity<ResponseDto.TokenResponse> signInGoogle(@PathVariable String projectId, @RequestBody RequestDto.SocialSignRequest request) {
-        return ResponseEntity.ok(googleService.signInGoogle(projectId, request));
+    public ResponseEntity<GlobalResponseDto> signInGoogle(@PathVariable String projectId, @RequestBody RequestDto.SocialSignRequest request) {
+        googleService.signInByIdToken(projectId, request);
+        return ResponseUtil.response(StatusCode.OK);
     }
-    */
 }

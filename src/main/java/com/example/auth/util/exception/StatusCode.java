@@ -16,6 +16,7 @@ public enum StatusCode {
     InvalidProjectId(HttpStatus.BAD_REQUEST, 1005, "등록되지 않은 프로젝트 ID 입니다."),
     InvalidParsingType(HttpStatus.BAD_REQUEST, 1006, "변환 타입이 맞지 않습니다."),
     NotExistOauthConfig(HttpStatus.BAD_REQUEST, 1007, "프로젝트에 해당하는 Oauth 설정이 없습니다."),
+    NotExistSocial(HttpStatus.BAD_REQUEST, 1008, "회원가입 되지 않은 소셜 계정입니다."),
 
 
     OK(HttpStatus.OK, 200, "응답이 정상 처리 되었습니다."),

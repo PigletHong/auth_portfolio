@@ -23,4 +23,18 @@ public class RequestDto {
         @JsonProperty("value")
         private String value;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(force = true)
+    public static class GoogleOauthConfigRequest {
+        @JsonProperty("client_id")
+        private String clientId;
+        @JsonProperty("client_secret")
+        private String clientSecret;
+        @JsonProperty("redirect_uri")
+        private String redirectUri;
+        @JsonProperty("scope")
+        private String scope;
+    }
 }

@@ -47,4 +47,9 @@ public class ConfigRepositoryImpl implements ConfigRepository {
         this.redisRepository.setOauthConfig(projectId, provider, oauthConfig.get());
         return oauthConfig;
     }
+
+    @Override
+    public void setOauthConfig(OauthConfig oauthConfig) {
+        this.oauthConfigJpaRepository.save(oauthConfig);
+    }
 }

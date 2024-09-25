@@ -30,6 +30,9 @@ public class OauthConfig {
     @Column(name = "redirect_uri", nullable = false)
     public String redirectUri;
 
+    @Column(name = "scope", nullable = false)
+    public String scope;
+
     @Column(name = "reg_date", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime regDate;
 }
