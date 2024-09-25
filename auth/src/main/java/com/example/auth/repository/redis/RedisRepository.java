@@ -5,7 +5,6 @@ import com.example.auth.domain.ProjectInformation;
 import com.example.auth.util.exception.CustomException;
 import com.example.auth.util.exception.StatusCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWK;
@@ -62,11 +61,6 @@ public class RedisRepository {
             throw new CustomException(StatusCode.InvalidParsingType);
         }
     }
-
-    public void setProjectInformation(String projectId, ProjectInformation projectInformation) {
-        try {
-            String jsonString = objectMapper.writeValueAsString(projectInformation);
-            log.info(jsonString);
 
     public Optional<OauthConfig> getOauthConfig(String projectId, String provider) {
         try {
